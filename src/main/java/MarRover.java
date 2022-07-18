@@ -2,27 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarRover {
-    private int y;
-    private int x;
+    private Point point;
     private Direction direction;
     private List<Command> commands = new ArrayList<>();
 
-    public MarRover(int x, int y, Direction direction) {
-        this.x = x;
-        this.y = y;
+    public MarRover(Point point, Direction direction) {
+        this.point = point;
         this.direction = direction;
     }
 
     public Direction direction() {
         return this.direction;
-    }
-
-    public int x() {
-        return this.x;
-    }
-
-    public int y() {
-        return this.y;
     }
 
     public void receiveCommands(List<Command> commands) {
@@ -33,44 +23,34 @@ public class MarRover {
         return this.commands;
     }
 
+    public void move() {
+        for (Command command : commands) {
+            switch (command) {
+                case F -> moveForward();
+                case B -> moveBack();
+                case R -> turnRight();
+                case L -> turnLeft();
+            }
+        }
+    }
+
     public void moveForward() {
-        if (this.direction == Direction.E) {
-            this.x++;
-        }
-        if (this.direction == Direction.N) {
-            this.y++;
-        }
-        if (this.direction == Direction.W) {
-            this.x--;
-        }
-        if (this.direction == Direction.S) {
-            this.y--;
-        }
+        this.point = this.point.move(this.direction);
     }
 
     public void moveBack() {
-        if (this.direction == Direction.E) {
-            this.x--;
-        }
-        if (this.direction == Direction.N) {
-            this.y--;
-        }
-        if (this.direction == Direction.W) {
-            this.x++;
-        }
-        if (this.direction == Direction.S) {
-            this.y++;
-        }
+        this.point = this.point.move(this.direction.getBackwardDirection());
     }
 
-    public void move() {
-        for (Command command : commands) {
-            if (command == Command.F) {
-                moveForward();
-            }
-            if (command == Command.B) {
-                moveBack();
-            }
-        }
+    public void turnLeft() {
+        direction = direction.changeDirection(-1);
+    }
+
+    public void turnRight() {
+        direction = direction.changeDirection(1);
+    }
+
+    public Point point() {
+        return this.point;
     }
 }
